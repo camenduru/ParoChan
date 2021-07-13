@@ -1,0 +1,11 @@
+oauth             ~ oauth:
+channel           ~ camenduru
+readusername      ~ off
+defaultlanguage   ~ cpu
+speechlanguage    ~ off
+ttsservice        ~ aws
+chattranslateto   ~ off
+speechtranslateto ~ en
+ssml-tag-start    ~ 
+ssml-tag-end      ~ 
+discord-token     ~ 

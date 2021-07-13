@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Twitch Parrot</title>
+    </head>
+    <body style="margin: 0; background-color:#00b140;">
+        <div style="margin-bottom: 10px; width: 100%; text-align: center; position: fixed; bottom: 0; font-size: 50px; font-family: Arial; color:white; text-shadow: 2px 2px #000;">
+            <span id="speech"></span><br>
+            <span id="translate"></span>
+        </div>
+    <script>
+        if ('webkitSpeechRecognition' in window) {
+            
+            SpeechRecognition = webkitSpeechRecognition || SpeechRecognition;
+            let recognition = new SpeechRecognition();
+
+            recognition.lang = '{{.SpeechLanguage}}';
+            recognition.interimResults = true;
+            recognition.continuous = true;
+            
+            let finalTranscript = '';
+
+            recognition.onstart = function() {
+              console.log("Recognition started");
+              document.getElementById('speech').innerHTML = "...";
+              document.getElementById('translate').innerHTML = "";
+            };
+
+            recognition.onresult = (event) => {
+                let interimTranscript = '';
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                let transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                        let request = new XMLHttpRequest();
+                        request.onreadystatechange = function() {
+                            if (this.readyState == 4 && this.status == 200) {
+                                var json = JSON.parse(this.response);
+                                document.getElementById('translate').innerHTML = json.Translation;
+                                finalTranscript = '';
+                            }
+                        };
+                        request.open('POST', '{{.SpeechAPI}}');
+                        request.send(finalTranscript);
+                    } else {
+                        interimTranscript = transcript;
+                    }
+                }
+                document.getElementById('speech').innerHTML = finalTranscript + '<i style="color:white;">' + interimTranscript + '</i>';
+            }
+
+            recognition.onerror = function(e) {
+              console.log("Error");
+            };
+
+            recognition.onend = function() {
+                console.log("Speech recognition ended");
+                recognition.start();
+            };
+
+            function start_speech() {
+                recognition.start();
+            }
+
+            start_speech();
+        } else {
+            alert("speech recognition API is not supported in your browser.");
+        }
+        </script> 
+   </body>
+</html>

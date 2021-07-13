@@ -1,0 +1,7 @@
+[8８]{4,}~ぱちぱち
+[wWｗ]{2,}~わらわら
+[@]~
+w:~<amazon:effect name="whispered">
+:w~</amazon:effect>
+ｗ：~<amazon:effect name="whispered"><lang xml:lang="ja-JP">
+：ｗ~</lang></amazon:effect>
